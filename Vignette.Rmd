@@ -1,0 +1,78 @@
+---
+title: "Workflow2 Vignette"
+author: "Alyssa Obermayer"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## What this package is for
+
+I have developed this workflow2 package to better analyze the appointment data at my current job. I work at a car dealership in the service department and keep track of all the QuickLane service jobs we have each day. This package will be able to take the data I collect on the differnt type of appointment statuses to generate averages so I can see the different trends over time. With these averages I will be able to generate visualizations to show represent the data.
+
+## Data
+
+The current data can be seen using this code. I have show the head of the data below.
+
+```{r}
+ApptData <- read.csv("https://raw.githubusercontent.com/aobermayer4/AlyssaObRGit/master/ApptData.csv",
+                     header = TRUE, sep = ",")
+    rownames(ApptData) <- ApptData[,1]
+        ApptData <- ApptData[,-1]
+ProdData <- read.csv("https://raw.githubusercontent.com/aobermayer4/AlyssaObRGit/master/ProductivityData.csv",
+                     header = TRUE, sep = ",")
+    rownames(ProdData) <- ProdData[,1]
+```
+```{r}
+head(ApptData)
+head(ProdData)
+```
+
+
+## Functions
+
+I generated a function to determine the mean of each column in the ApptData data frame. This information can then be used to create further data frames and visualizations. This functions excludes zeros, as they most likely indicated the dealership was closed on that given day.
+
+```{r}
+MeanAppt <- function(x){
+  mean_col= sum(x,na.rm=TRUE)/length(!is.na(x))
+  return(mean_col)
+}
+```
+
+I also created a function to give me the percent number of walk-in appointments that might have come in on any given day.
+
+```{r}
+PercWalkIn <- function(x,y){
+  walkins <- x
+  Total <- y
+  percent <- round((x/y)*100, digits = 1)
+  result <- paste(percent, "%", sep = " ")
+  return(result)
+}
+```
+
+
+## Figures
+
+This figure shows a box and whisker plot detailing the average amount of cars we have seen and the high and low extremes over a seven month period.
+
+```{r echo=FALSE, fig.height=4, fig.width=4}
+TotalT_V <- ApptData[,32]
+TotalT_DF <- data.frame(TotalT_V)
+boxplot(TotalT_DF,
+        main = "Total Vehicles Seen",
+        ylab = "Vehicles Seen")
+```
+
+

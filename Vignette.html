@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Alyssa Obermayer" />
+
+<meta name="date" content="2020-04-27" />
+
+<title>Workflow2 Vignette</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Workflow2 Vignette</h1>
+<h4 class="author">Alyssa Obermayer</h4>
+<h4 class="date">2020-04-27</h4>
+
+
+
+<div id="what-this-package-is-for" class="section level2">
+<h2>What this package is for</h2>
+<p>I have developed this workflow2 package to better analyze the appointment data at my current job. I work at a car dealership in the service department and keep track of all the QuickLane service jobs we have each day. This package will be able to take the data I collect on the differnt type of appointment statuses to generate averages so I can see the different trends over time. With these averages I will be able to generate visualizations to show represent the data.</p>
+</div>
+<div id="data" class="section level2">
+<h2>Data</h2>
+<p>The current data can be seen using this code. I have show the head of the data below.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">ApptData &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/aobermayer4/AlyssaObRGit/master/ApptData.csv&quot;</span>,</a>
+<a class="sourceLine" id="cb1-2" title="2">                     <span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">sep =</span> <span class="st">&quot;,&quot;</span>)</a>
+<a class="sourceLine" id="cb1-3" title="3">    <span class="kw">rownames</span>(ApptData) &lt;-<span class="st"> </span>ApptData[,<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb1-4" title="4">        ApptData &lt;-<span class="st"> </span>ApptData[,<span class="op">-</span><span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb1-5" title="5">ProdData &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/aobermayer4/AlyssaObRGit/master/ProductivityData.csv&quot;</span>,</a>
+<a class="sourceLine" id="cb1-6" title="6">                     <span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">sep =</span> <span class="st">&quot;,&quot;</span>)</a>
+<a class="sourceLine" id="cb1-7" title="7">    <span class="kw">rownames</span>(ProdData) &lt;-<span class="st"> </span>ProdData[,<span class="dv">1</span>]</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">head</span>(ApptData)</a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="co">#&gt;           MonA MonW MonN MonT TueA TueW TueN TueT WedA WedW WedN WedT ThurA</span></a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="co">#&gt; 8/5-8/10    20   13    5   33   28   16    5   44   24   11    3   35    29</span></a>
+<a class="sourceLine" id="cb2-4" title="4"><span class="co">#&gt; 8/12-8/17   22   14    3   36   21   12    1   33   21   11    2   32    22</span></a>
+<a class="sourceLine" id="cb2-5" title="5"><span class="co">#&gt; 8/19-8/24   20   19    3   39   21    6    5   27   16   10    3   26    22</span></a>
+<a class="sourceLine" id="cb2-6" title="6"><span class="co">#&gt; 8/26-8/31   26   17    8   43   27    8    2   35   19    9    4   28    27</span></a>
+<a class="sourceLine" id="cb2-7" title="7"><span class="co">#&gt; 9/2-9/7     NA   NA   NA   NA   11   18    0   29   21   13    4   34    19</span></a>
+<a class="sourceLine" id="cb2-8" title="8"><span class="co">#&gt; 9/9-9/14    23    8    8   31   20    7    2   27   17    6    2   23    22</span></a>
+<a class="sourceLine" id="cb2-9" title="9"><span class="co">#&gt;           ThurW ThurN ThurT FriA FriW FriN FriT SatA SatW SatN SatT SunA SunW</span></a>
+<a class="sourceLine" id="cb2-10" title="10"><span class="co">#&gt; 8/5-8/10     10     3    39   27    8    1   35   25   14    4   39   NA   NA</span></a>
+<a class="sourceLine" id="cb2-11" title="11"><span class="co">#&gt; 8/12-8/17     8     7    30   27   21    3   48   22   12    6   34   NA   NA</span></a>
+<a class="sourceLine" id="cb2-12" title="12"><span class="co">#&gt; 8/19-8/24     6     1    28   28    9    3   37   21   12    4   33   NA   NA</span></a>
+<a class="sourceLine" id="cb2-13" title="13"><span class="co">#&gt; 8/26-8/31     7     2    34   26    9    2   35   19   11    3   30   NA   NA</span></a>
+<a class="sourceLine" id="cb2-14" title="14"><span class="co">#&gt; 9/2-9/7       8     2    27   23   14    4   37   16   10    1   26   NA   NA</span></a>
+<a class="sourceLine" id="cb2-15" title="15"><span class="co">#&gt; 9/9-9/14      9     2    31   27   18    5   45   19   10    5   29   NA   NA</span></a>
+<a class="sourceLine" id="cb2-16" title="16"><span class="co">#&gt;           SunN SunT TotalA TotalW TotalN TotalT</span></a>
+<a class="sourceLine" id="cb2-17" title="17"><span class="co">#&gt; 8/5-8/10    NA   NA    153     72     21    225</span></a>
+<a class="sourceLine" id="cb2-18" title="18"><span class="co">#&gt; 8/12-8/17   NA   NA    135     78     22    213</span></a>
+<a class="sourceLine" id="cb2-19" title="19"><span class="co">#&gt; 8/19-8/24   NA   NA    128     62     19    190</span></a>
+<a class="sourceLine" id="cb2-20" title="20"><span class="co">#&gt; 8/26-8/31   NA   NA    144     61     21    205</span></a>
+<a class="sourceLine" id="cb2-21" title="21"><span class="co">#&gt; 9/2-9/7     NA   NA     90     63     11    153</span></a>
+<a class="sourceLine" id="cb2-22" title="22"><span class="co">#&gt; 9/9-9/14    NA   NA    128     58     24    186</span></a>
+<a class="sourceLine" id="cb2-23" title="23"><span class="kw">head</span>(ProdData)</a>
+<a class="sourceLine" id="cb2-24" title="24"><span class="co">#&gt;                Week   Felix  Chase Rodney  Corey   Andy   Josh</span></a>
+<a class="sourceLine" id="cb2-25" title="25"><span class="co">#&gt; 8/5-8/10   8/5-8/10  60.81% 49.46% 74.06% 70.21% 46.98% 48.65%</span></a>
+<a class="sourceLine" id="cb2-26" title="26"><span class="co">#&gt; 8/12-8/17 8/12-8/17  61.36% 61.66% 83.31% 54.85% 45.10% 47.51%</span></a>
+<a class="sourceLine" id="cb2-27" title="27"><span class="co">#&gt; 8/19-8/24 8/19-8/24  53.86% 67.48% 85.71% 52.44% 38.56% 39.51%</span></a>
+<a class="sourceLine" id="cb2-28" title="28"><span class="co">#&gt; 8/26-8/31 8/26-8/31  86.02% 76.58% 83.19% 68.43% 55.10% 67.38%</span></a>
+<a class="sourceLine" id="cb2-29" title="29"><span class="co">#&gt; 9/2-9/7     9/2-9/7  57.95% 63.97% 80.43% 57.57% 45.89% 46.31%</span></a>
+<a class="sourceLine" id="cb2-30" title="30"><span class="co">#&gt; 9/9-9/14   9/9-9/14 100.17% 69.83% 78.59% 54.03% 36.44% 36.95%</span></a></code></pre></div>
+</div>
+<div id="functions" class="section level2">
+<h2>Functions</h2>
+<p>I generated a function to determine the mean of each column in the ApptData data frame. This information can then be used to create further data frames and visualizations. This functions excludes zeros, as they most likely indicated the dealership was closed on that given day.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">MeanAppt &lt;-<span class="st"> </span><span class="cf">function</span>(x){</a>
+<a class="sourceLine" id="cb3-2" title="2">  mean_col=<span class="st"> </span><span class="kw">sum</span>(x,<span class="dt">na.rm=</span><span class="ot">TRUE</span>)<span class="op">/</span><span class="kw">length</span>(<span class="op">!</span><span class="kw">is.na</span>(x))</a>
+<a class="sourceLine" id="cb3-3" title="3">  <span class="kw">return</span>(mean_col)</a>
+<a class="sourceLine" id="cb3-4" title="4">}</a></code></pre></div>
+<p>I also created a function to give me the percent number of walk-in appointments that might have come in on any given day.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">PercWalkIn &lt;-<span class="st"> </span><span class="cf">function</span>(x,y){</a>
+<a class="sourceLine" id="cb4-2" title="2">  walkins &lt;-<span class="st"> </span>x</a>
+<a class="sourceLine" id="cb4-3" title="3">  Total &lt;-<span class="st"> </span>y</a>
+<a class="sourceLine" id="cb4-4" title="4">  percent &lt;-<span class="st"> </span><span class="kw">round</span>((x<span class="op">/</span>y)<span class="op">*</span><span class="dv">100</span>, <span class="dt">digits =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb4-5" title="5">  result &lt;-<span class="st"> </span><span class="kw">paste</span>(percent, <span class="st">&quot;%&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot; &quot;</span>)</a>
+<a class="sourceLine" id="cb4-6" title="6">  <span class="kw">return</span>(result)</a>
+<a class="sourceLine" id="cb4-7" title="7">}</a></code></pre></div>
+</div>
+<div id="figures" class="section level2">
+<h2>Figures</h2>
+<p>This figure shows a box and whisker plot detailing the average amount of cars we have seen and the high and low extremes over a seven month period.</p>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
